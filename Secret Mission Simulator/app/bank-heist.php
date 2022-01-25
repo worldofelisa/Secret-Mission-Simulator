@@ -130,7 +130,38 @@ class Story
             echo "You're in. Well done! You tricked the guards, who are none the wiser. Now let's see if you can get to the vault.\n";
         }
     }
+
+    public function timeToStart()
+    {
+       echo "You and your team need to distract the staff so you can sneak down to the vault.";
+       echo "Roll to see how distracting your team is. Type roll in now:\n";
+       $rollTheDice = new Dice();
+       $response = readline(">> ");
+
+       if ($response != "roll")
+       {
+           exit("Heist Unsuccessful. You and your team members begin to argue over who is meant to distract the staff. The guards hear you and arrest you. Good luck explaining this one!");
+       } else
+       {
+           $diceResult = $rollTheDice->diceForRolling("d20");
+       }
+       if ($diceResult >= 10)
+       {
+           echo ("Your team member successfully distracts the staff. You are able to slip into a back door and make your way to the vault.\n");
+       }else
+       {
+           exit("The staff were suspicious and hit the alarm. You and your team made it out... barely. Try again another time.\n");
+       }
+    }
+
+    public function openVault()
+    {
+
+    }
 }
+
+//sending a team member out too early alerts some police on break to the heist - fail
+//not sending a team member out means the get away car isn't ready and it fails
 
 echo "What is your name, agent?";
 $name = readline("\n" . ">> ");
@@ -140,3 +171,5 @@ $story = new Story();
 $story->startMission();
 $story->meetTheTeam();
 $story->trickTheGuards();
+$story->timeToStart();
+$story->openVault();
