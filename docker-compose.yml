@@ -1,0 +1,9 @@
+version: 2.2.3
+
+services:
+  secretMission:
+    image: php:8-fpm-alpine
+    ports:
+      - 9003:9000
+    volumes:
+      - ./app:/var/www/html
