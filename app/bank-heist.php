@@ -224,7 +224,7 @@ class Story
                 $passCode++;
                 if (count($result) == 3)
                 {
-                    echo "You successfully guessed $result[0], $result[1], $result[2] and have cracked the code. Well done Agent!\n";
+                    echo "You successfully guessed $result[0], $result[1], $result[2] and have cracked the code. Well done Agent $this->name!\n";
                     break;
                 }
             }
@@ -275,7 +275,7 @@ class Story
             return;
         }
 
-        $total = $result*1000 + $money*1000;
+        $total = $result * 1000 + $money * 1000;
         exit("As you go to leave the bank with your \$" . $total . " you realize no one prepped the get away car.\nAs you climb inside you find yourself surrounded by the police, who have by now been alerted by the bank manager.\nHeist unsuccessful.\nEnjoy prison!");
     }
 
