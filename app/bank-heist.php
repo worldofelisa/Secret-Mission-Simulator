@@ -30,7 +30,7 @@ class Story
     private $vaultCode = [];
     private $name;
 
-    const MAX_VAULT_CODE = 3;
+    const MAX_VAULT_CODE = 9;
 
     public function __construct()
 {
@@ -260,7 +260,7 @@ class Story
             echo "With the help of your partner you acquire \$" . $result . ",000.";
         }
 
-        echo "Do you want to send your team member out now?\n";
+        echo " Do you want to send your team member out now?\n";
         $response = readline(">> ");
 
         if ($response == "no")
@@ -293,7 +293,7 @@ class Story
             $result = $rollTheDice->diceForRolling("d4");
             if ($result == 1 || $result == 2)
             {
-                echo "The car does not start. As you hear the alarm inside the bank begin you sound, you both get out and flee on foot, agreeing to meet up at base.\n";
+                echo "The car does not start. As you hear the alarm inside the bank begin to sound, you both get out and flee on foot, agreeing to meet up at base.\n";
                 goto end;
             } else
             {
