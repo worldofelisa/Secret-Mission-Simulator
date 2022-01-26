@@ -27,18 +27,34 @@ class Dice
 class Story
 {
     private $team = [];
+    private $vaultCode = [];
+    private $name;
+
+    const MAX_VAULT_CODE = 9;
 
     public function __construct()
 {
-    return rand(1,39);
+    for ($a = 0; $a < 3; $a++)
+    {
+        $this->vaultCode = [rand(1, self::MAX_VAULT_CODE), rand(1,self::MAX_VAULT_CODE), rand(1,self::MAX_VAULT_CODE)];
+    }
 }
 
+    /**
+     * @return void
+     */
+    public function setName()
+    {
+        echo "What is your name, agent?\n";
+        $this->name = readline(">> ");
+    }
 
     /**
      * @return void
      */
     public function startMission()
     {
+        echo "Welcome, Agent $this->name. Are you ready to start your mission? \nRespond yes or no:";
         $response = readline("\n" . ">> " );
         if ($response == "no")
         {
@@ -95,6 +111,12 @@ class Story
             }
         }
     }
+
+    /**
+     * @param $teamMemberValue
+     * @param $teamMemberName
+     * @return void
+     */
     private function addTeamMember($teamMemberValue, $teamMemberName)
     {
         echo "Do you want another teammate? Type yes or no in now:\n";
@@ -111,6 +133,9 @@ class Story
         }
     }
 
+    /**
+     * @return void
+     */
     public function trickTheGuards()
     {
         echo "Time to move inside the bank. Let's see if you can make it past the guards.\n";
@@ -138,6 +163,9 @@ class Story
         }
     }
 
+    /**
+     * @return void
+     */
     public function timeToStart()
     {
        echo "You and your team need to distract the staff so you can sneak down to the vault.\n";
@@ -161,22 +189,24 @@ class Story
        }
     }
 
+    /**
+     * @return void
+     */
     public function openVault()
     {
         echo "You get past the vault, you will have to guess the code.\n";
-        echo "There are three numbers in the lock combination between 1-39. You must correctly guess all three for the lock to open.\n";
+        echo "There are three numbers in the lock combination between 1-" . self::MAX_VAULT_CODE . ". You must correctly guess all three for the lock to open.\n";
         echo "Be warned - you will only have three chances at each number before the vaults secondary locks are activated and the alarm is triggered.\n";
         echo "Good luck Agent. Begin your guesses now:\n";
-
-        $vaultCode = $this->__construct();
         $yes = "Congratulations, you got it!\n";
         $no = "Incorrect passcode. Please try again.\n";
+        $passCode = 1;
         $codeAttempt = 1;
 
-        for( ; ; )
+        while ($passCode <= count($this->vaultCode))
         {
             $vaultGuess = readline(">> ");
-            if ($vaultGuess != $vaultCode)
+            if ($vaultGuess != $this->vaultCode[$passCode-1])
             {
                 $codeAttempt++;
                 echo $no;
@@ -187,11 +217,11 @@ class Story
                 }
             } else
             {
-                $vaultCode = $this->__construct();
                 unset($codeAttempt);
                 $codeAttempt = 1;
                 echo $yes;
                 $result[] = $vaultGuess;
+                $passCode++;
                 if (count($result) == 3)
                 {
                     echo "You successfully guessed $result[0], $result[1], $result[2] and have cracked the code. Well done Agent!\n";
@@ -200,18 +230,125 @@ class Story
             }
         }
     }
+
+    /**
+     * @return void
+     */
+    public function getMoney()
+    {
+        $rollTheDice = new Dice();
+        echo "The vault is open. Do you want to leave now?\n";
+        $response = readline(">> ");
+
+        if ($response == "yes")
+        {
+            exit("You got away... but you forgot to take money with you. So much for a heist. We'll hire better people next time.\n");
+        } else
+        {
+            echo "Let's grab the money then!\n";
+        }
+
+        echo "You are grabbing the money. Do you want to send your team member out now?\n";
+        $response = readline(">> ");
+
+        if ($response == "yes")
+        {
+            exit("Your team member was sent out too early. They run into cops on their break as they try to leave and you are all arrested.\nHeist unsuccessful.");
+        }else
+        {
+            $result =$rollTheDice->diceForRolling("d10");
+            echo "With the help of your partner you acquire \$" . $result . ",000.";
+        }
+
+        echo "Do you want to send your team member out now?\n";
+        $response = readline(">> ");
+
+        if ($response == "no")
+        {
+            echo "Roll the die to see how much more money you get. Type roll in now:\n";
+            readline(">> ");
+            $money = $rollTheDice->diceForRolling("d10");
+            echo "You have an extra \$" . $money . "in your stash now!";
+        } else
+        {
+            echo "Good. Your teammate leaves to go start the get away car.\nYou manage to get a bit more money into the bag before you follow after them.\n";
+            return;
+        }
+
+        $total = $result + $money;
+        exit("As you go to leave the bank with your \$" . $total . "you realize no one prepped the get away car.\nAs you climb inside you find yourself surrounded by the police, who have by now been alerted by the bank manager.\nHeist unsuccessful.\nEnjoy prison!");
+    }
+
+    /**
+     * @return void
+     */
+    public function leaveSafely()
+    {
+        $rollTheDice = new Dice();
+        echo "While you finish in the bank, your teammate attempts to start the car. Roll to see how successful they are:\n";
+        start:
+        $response = readline(">> ");
+        if ($response == "roll")
+        {
+            $result = $rollTheDice->diceForRolling("d4");
+            if ($result == 1 || $result == 2)
+            {
+                echo "The car does not start. As you hear the alarm inside the bank begin you sound, you both get out and flee on foot, agreeing to meet up at base.\n";
+                goto end;
+            } else
+            {
+                echo "The car starts and you drive away.\nYou go back to base, where you count up your prize.\n";
+                $total = $rollTheDice->diceForRolling("d10")+$rollTheDice->diceForRolling("d10")+$rollTheDice->diceForRolling("d4");
+                echo "You manage to get away with \$" . $total . ",000.";
+                exit("Well done, Agent $this->name. We look forward to working with you again in the future.\nNow take your money and go.\n");
+            }
+        } else
+        {
+            echo "This is no time to play around! Roll now!";
+            goto start;
+            end:
+        }
+    }
+
+    public function footRace()
+    {
+        $rollTheDice = new Dice();
+        echo "The police begin to chase you. You now need to roll off against the police to see if you escape. Type roll in now:\n";
+        $response = readline(">> ");
+        if($response != "roll")
+        {
+            exit("You didn't even try to escape... but it didn't make the judge any less sympathetic. Enjoy prison!\n");
+        } else
+        {
+            $userRoll = $rollTheDice->diceForRolling("d20");
+            $policeRoll = $rollTheDice->diceForRolling("d20");
+
+            if ($userRoll > $policeRoll)
+            {
+                echo "You escape to the rendezvous spot and count out the money.";
+                $total = $rollTheDice->diceForRolling("d10")+$rollTheDice->diceForRolling("d10")+$rollTheDice->diceForRolling("d4");
+                echo "You manage to get away with \$" . $total . ",000.";
+                exit("Well done, Agent $this->name. We look forward to working with you again in the future.\nNow take your money and go.\n");
+            } elseif ($userRoll < $policeRoll)
+            {
+                exit("The police are faster than you. They manage to tackle you to the ground, wrestling the money away. You are arrested... better luck next time!\n");
+            }elseif ($userRoll == $policeRoll)
+            {
+                echo "The police close the distance. You throw the money at them, as a diversion. It works, and they stop to collect that, leaving you time to get away.\n";
+                exit("You may have failed to get money, but at least you are free. You lay low for a while, biding your time until you can try again.\nBetter luck next time.\n");
+            }
+        }
+    }
 }
 
-//sending a team member out too early alerts some police on break to the heist - fail
-//not sending a team member out means the get away car isn't ready and it fails
-
-echo "What is your name, agent?";
-$name = readline("\n" . ">> ");
-echo "Welcome, Agent $name. Are you ready to start your mission? \nRespond yes or no:";
 $rollTheDice = new Dice();
 $story = new Story();
+$story->setName();
 $story->startMission();
 $story->meetTheTeam();
 $story->trickTheGuards();
 $story->timeToStart();
 $story->openVault();
+$story->getMoney();
+$story->leaveSafely();
+$story->footRace();
