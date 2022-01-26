@@ -27,6 +27,13 @@ class Dice
 class Story
 {
     private $team = [];
+
+    public function __construct()
+{
+    return rand(1,39);
+}
+
+
     /**
      * @return void
      */
@@ -133,14 +140,14 @@ class Story
 
     public function timeToStart()
     {
-       echo "You and your team need to distract the staff so you can sneak down to the vault.";
+       echo "You and your team need to distract the staff so you can sneak down to the vault.\n";
        echo "Roll to see how distracting your team is. Type roll in now:\n";
        $rollTheDice = new Dice();
        $response = readline(">> ");
 
        if ($response != "roll")
        {
-           exit("Heist Unsuccessful. You and your team members begin to argue over who is meant to distract the staff. The guards hear you and arrest you. Good luck explaining this one!");
+           exit("Heist Unsuccessful. You and your team members begin to argue over who is meant to distract the staff. The guards hear you and arrest you. Good luck explaining this one!\n");
        } else
        {
            $diceResult = $rollTheDice->diceForRolling("d20");
@@ -156,7 +163,42 @@ class Story
 
     public function openVault()
     {
+        echo "You get past the vault, you will have to guess the code.\n";
+        echo "There are three numbers in the lock combination between 1-39. You must correctly guess all three for the lock to open.\n";
+        echo "Be warned - you will only have three chances at each number before the vaults secondary locks are activated and the alarm is triggered.\n";
+        echo "Good luck Agent. Begin your guesses now:\n";
 
+        $vaultCode = $this->__construct();
+        $yes = "Congratulations, you got it!\n";
+        $no = "Incorrect passcode. Please try again.\n";
+        $codeAttempt = 1;
+
+        for( ; ; )
+        {
+            $vaultGuess = readline(">> ");
+            if ($vaultGuess != $vaultCode)
+            {
+                $codeAttempt++;
+                echo $no;
+
+                if ($codeAttempt > 3)
+                {
+                    exit("Too many incorrect passcodes. Vault is now locked. You run as the alarm begins to sound, straight into the arms of the guards.\nHeist unsuccessful.\nBetter luck next time.\n");
+                }
+            } else
+            {
+                $vaultCode = $this->__construct();
+                unset($codeAttempt);
+                $codeAttempt = 1;
+                echo $yes;
+                $result[] = $vaultGuess;
+                if (count($result) == 3)
+                {
+                    echo "You successfully guessed $result[0], $result[1], $result[2] and have cracked the code. Well done Agent!\n";
+                    break;
+                }
+            }
+        }
     }
 }
 
