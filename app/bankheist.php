@@ -101,7 +101,7 @@ class Story
     public $teamSize;
     public $moneyTotal;
     private $vaultCode = [];
-    const MAX_VAULT_CODE = 9;
+    const MAX_VAULT_CODE = 5;
 
     /**
      * Sets up the vault numbers to be three random numbers and stores them into the private array.
@@ -201,8 +201,7 @@ class Story
         if ($this->teamSize == 5)
         {
             $disadvantage = $rollTheDice->diceForRolling("d100");
-            $newResult = min($rollResult, $disadvantage);
-            $diceResult = $newResult;
+            $diceResult = min($rollResult, $disadvantage);
         } elseif ($this->teamSize == 4)
         {
             $diceResult = $rollResult - 10;
@@ -309,7 +308,7 @@ class Story
 
                 if (count($result) == 3)
                 {
-                    echo "You successfully guessed $result[0], $result[1], $result[2] and have cracked the code. Well done Agent $this->name!\n";
+                    echo "You successfully guessed $result[0], $result[1], $result[2] and have cracked the code. Well done Agent $this->agentName!\n";
                     break;
                 }
             }
@@ -366,7 +365,7 @@ class Story
             $money = $rollTheDice->diceForRolling("d10");
             echo "You have an extra \$" . $money . ",000 in your stash now!";
             $total = $result * 1000 + $money * 1000;
-            exit("As you go to leave the bank with your \$" . $total . " you realize no one prepped the get away car.\nAs you climb inside you find yourself surrounded by the police, who have by now been alerted by the bank manager.\nHeist unsuccessful.\nEnjoy prison!");
+            exit(" As you go to leave the bank with your \$" . $total . " you realize no one prepped the get away car.\nAs you climb inside you find yourself surrounded by the police, who have by now been alerted by the bank manager.\nHeist unsuccessful.\nEnjoy prison!\n");
         } else
         {
             $money = $rollTheDice->diceForRolling("d4");
@@ -408,7 +407,7 @@ class Story
                             $this->teamSize = $this->teamSize - 1;
                             echo "You let your teammate run out of the car, successfully distracting the police.\n";
                             echo "Your team is now $this->teamSize and you currently have $this->teamMembers team members";
-                            echo "The car starts and you drive away.\nYou go back to base, where you hand over your prize.\n You manage to get away with $this->moneyTotal";
+                            echo "The car starts and you drive away.\nYou go back to base, where you hand over your prize.\n You manage to get away with $this->moneyTotal\n";
                             exit("Well done, Agent $this->agentName. We look forward to working with you again in the future.\nNow take your money and go.\n");
                         }
                     }else
@@ -428,7 +427,7 @@ class Story
                     exit("Well done, Agent $this->agentName. We look forward to working with you again in the future.\nNow take your money and go.\n");
                     break;
                 case 4:
-                    echo "The car is idling as you leave the bank. You hop in and drive away.\nYou go back to base, where you hand over your prize.\n You manage to get away with $this->moneyTotal";
+                    echo "The car is idling as you leave the bank. You hop in and drive away.\nYou go back to base, where you hand over your prize.\n You manage to get away with $this->moneyTotal\n";
                     exit("Well done, Agent $this->agentName. We look forward to working with you again in the future.\nNow take your money and go.\n");
                     break;
             }
@@ -487,7 +486,7 @@ class Ending
 
             if ($userRoll > $policeRoll)
             {
-                echo "You escape to the rendezvous spot and count out the money.";
+                echo "You escape to the rendezvous spot and count out the money.\n";
                 return;
             } elseif ($userRoll < $policeRoll)
             {
@@ -509,15 +508,12 @@ class Ending
                 }
             } elseif ($userRoll == $policeRoll)
             {
-                echo "The police close the distance. To try and get away, you jump from the car as it slows on a turn, bag on money in hand.\nContinue on foot.";
+                echo "The police close the distance. To try and get away, you jump from the car as it slows on a turn, bag of money in hand.\nContinue on foot.\n";
                 $this->footRace();
             }
         }
     }
 }
-
-
-
 
 $story = new Story();
 $story->startMission();
@@ -527,4 +523,3 @@ $story->timeToStart();
 $story->openVault();
 $story->getMoney();
 $story->leaveSafely();
-
