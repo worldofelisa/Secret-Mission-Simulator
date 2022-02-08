@@ -101,7 +101,7 @@ class Story
     public $teamSize;
     public $moneyTotal;
     private $vaultCode = [];
-    const MAX_VAULT_CODE = 3;
+    const MAX_VAULT_CODE = 9;
 
     /**
      * Sets up the vault numbers to be three random numbers and stores them into the private array.
